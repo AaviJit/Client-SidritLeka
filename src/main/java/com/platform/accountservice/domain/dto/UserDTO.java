@@ -1,12 +1,20 @@
 package com.platform.accountservice.domain.dto;
 
+import java.util.List;
+
 public class UserDTO {
 
     private String username;
+
     private String email;
+
     private String password;
+
     private String firstName;
+
     private String lastName;
+
+    private List<String> roles;
 
     public String getUsername() {
         return username;
@@ -48,6 +56,22 @@ public class UserDTO {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 
     public boolean isValid() {

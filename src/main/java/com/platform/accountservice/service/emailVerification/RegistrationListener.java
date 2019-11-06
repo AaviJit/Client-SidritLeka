@@ -43,6 +43,8 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 		email.setTo(recipientAddress);
 		email.setSubject(subject);
 		email.setText(message + " http://localhost:8090" + confirmationUrl);
+
+		System.out.println(message + " http://localhost:8090" + confirmationUrl);
 		mailSender.send(email);
 	}
 }

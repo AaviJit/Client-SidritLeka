@@ -1,7 +1,9 @@
+/*
 package com.platform.accountservice.security;
 
 import java.util.Collections;
 
+import com.platform.accountservice.service.impl.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
@@ -31,15 +33,14 @@ import com.platform.accountservice.service.UserService;
 @Order(SecurityProperties.BASIC_AUTH_ORDER)
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
-    private final UserService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    public WebSecurity(UserService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder)
+    public WebSecurity(CustomUserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder)
     {
         this.userDetailsService = userDetailsService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
-    
+
     @Autowired
     public void globalUserDetails(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService)
@@ -58,7 +59,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     }
 
 
-    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
+    @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
@@ -74,7 +75,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
 
 
-    @Bean
+
+  */
+/*  @Bean
 	public AuthenticationTokenFilter authenticationTokenFilterBean()
 			throws Exception {
 		AuthenticationTokenFilter authenticationTokenFilter = new AuthenticationTokenFilter();
@@ -82,7 +85,6 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 				.setAuthenticationManager(authenticationManagerBean());
 		return authenticationTokenFilter;
 	}
-    
     @Bean
     public CorsFilter corsFilter() {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -93,31 +95,60 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         config.setAllowedMethods(Collections.singletonList("*"));
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
-    }
-    
+    }*//*
+
+
+
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .anonymous().disable()
+       */
+/* http
                 .authorizeRequests()
-                
-                .antMatchers("/api-docs/**").permitAll()
-//                .antMatchers(HttpMethod.POST, SecurityConstants.LOGIN_URL).permitAll()
+
+                *//*
+*/
+/*.antMatchers("/","/users/register","/registrationConfirm").permitAll()
+                .antMatchers("/users/user/**", "/users/update/**").hasAnyAuthority("ROLE_ADMIN","ROLE_USER","ROLE_MODERATOR")
+                .antMatchers("/users/allUsers","/users/changeRole","/users/changePassword","/resetPassword","/savePassword").hasAnyAuthority("ROLE_ADMIN")*//*
+*/
+/*
                 .antMatchers(HttpMethod.PUT, SecurityConstants.CHANGE_USER_ROLE_URL, SecurityConstants.CHANGE_USER_PASSWORD_URL).hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, SecurityConstants.GET_USER_URL).hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.PUT, SecurityConstants.UPDATE_USER_URL).hasAnyRole("USER", "ADMIN")
         		.antMatchers(HttpMethod.GET, SecurityConstants.ADMIN_URL).hasRole("ADMIN")
         		.antMatchers(HttpMethod.GET, SecurityConstants.MODERATOR_URL).hasAnyRole("MODERATOR")
-//        		.anyRequest().authenticated()
-                .and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler())
-                ;
-        
+        ;
      // Custom JWT based authentication
      		http.addFilterBefore(authenticationTokenFilterBean(),
-     				UsernamePasswordAuthenticationFilter.class);
+     				UsernamePasswordAuthenticationFilter.class);*//*
+
+
+
+
+        http
+                .csrf().disable()
+                .anonymous().disable()
+                .authorizeRequests()
+
+                .antMatchers("/api-docs/**").permitAll()
+                .antMatchers(HttpMethod.PUT, SecurityConstants.CHANGE_USER_ROLE_URL, SecurityConstants.CHANGE_USER_PASSWORD_URL).hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, SecurityConstants.GET_USER_URL).hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.PUT, SecurityConstants.UPDATE_USER_URL).hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.GET, SecurityConstants.ADMIN_URL).hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, SecurityConstants.MODERATOR_URL).hasAnyRole("MODERATOR")
+                .antMatchers(HttpMethod.GET, SecurityConstants.GET_ALL_USER_URL).hasAnyRole("ADMIN")
+
+                .and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler())
+        ;
+        */
+/*http.addFilterBefore(authenticationTokenFilterBean(),
+                UsernamePasswordAuthenticationFilter.class);*//*
+
     }
+
     
 
 
 }
+*/

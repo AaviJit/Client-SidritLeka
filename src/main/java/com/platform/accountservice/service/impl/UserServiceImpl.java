@@ -34,30 +34,30 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
-    
+
     @Autowired
     RoleRepository roleRepository;
 
     @Autowired
     VerificationTokenRepository tokenRepository;
-    
+
     @Autowired
     PasswordTokenRepository passwordTokenRepository;
 
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
-    
+
     @Autowired
-	TokenUtils tokenUtils;
-    
+    TokenUtils tokenUtils;
+
     @Override
     public User createUser(User user) {
 
-        if (userRepository.findByEmail(user.getEmail()) != null){
+        if (userRepository.findByEmail(user.getEmail()) != null) {
             throw new RecordExistsException("Record with given email already exists!");
         }
-        
-        if (userRepository.findByUsername(user.getUsername()) != null){
+
+        if (userRepository.findByUsername(user.getUsername()) != null) {
             throw new RecordExistsException("Record with given username already exists!");
         }
 
@@ -66,39 +66,39 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException  {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         User userEntity = userRepository.findByUsername(username);
         if (userEntity == null)
             throw new UsernameNotFoundException(username);
         if (!userEntity.getIsEnabled())
-        	throw new RuntimeException("Please verify your email before login!");
+            throw new RuntimeException("Please verify your email before login!");
 
         return new org.springframework.security.core.userdetails.User(userEntity.getUsername(), userEntity.getPassword(), userEntity.getIsEnabled(),
-        		true, true, true, getAuthorities(userEntity.getUserRoles()));
+                true, true, true, getAuthorities(userEntity.getUserRoles()));
     }
-    
+
 //    private Collection<? extends GrantedAuthority> getAuthorities(
 //      Collection<Roles> roles) {
 //  
 //        return getGrantedAuthorities(getPrivileges(roles));
 //    }
-    
+
     private Collection<? extends GrantedAuthority> getAuthorities(
-	  Collection<Role> roles) {
-	    List<GrantedAuthority> authorities = new ArrayList<>();
-	    for (Role role: roles) {
-	        authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
-	        role.getRolePermissions().stream()
-	         .map(p -> new SimpleGrantedAuthority(p.getPermissionName()))
-	         .forEach(authorities::add);
-	    }
-	     
-	    return authorities;
-	}
-    
+            Collection<Role> roles) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
+            role.getRolePermissions().stream()
+                    .map(p -> new SimpleGrantedAuthority(p.getPermissionName()))
+                    .forEach(authorities::add);
+        }
+
+        return authorities;
+    }
+
     private List<String> getPrivileges(Collection<Role> roles) {
-    	  
+
         List<String> privileges = new ArrayList<>();
         List<Permission> collection = new ArrayList<>();
         for (Role role : roles) {
@@ -109,7 +109,7 @@ public class UserServiceImpl implements UserService {
         }
         return privileges;
     }
-    
+
     private List<GrantedAuthority> getGrantedAuthorities(List<String> privileges) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         for (String privilege : privileges) {
@@ -117,38 +117,36 @@ public class UserServiceImpl implements UserService {
         }
         return authorities;
     }
-    
-	@Override
-	public User findUserByEmail(String userEmail) {
-		// TODO Auto-generated method stub
-		return userRepository.findByEmail(userEmail);
-	}
-	
-	@Override
-	public User findUserByUsername(String username) {
-		// TODO Auto-generated method stub
-		return userRepository.findByUsername(username);
-	}
-    
+
+    @Override
+    public User findUserByEmail(String userEmail) {
+        return userRepository.findByEmail(userEmail);
+    }
+
+    @Override
+    public User findUserByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
     @Override
     public User getUser(String verificationToken) {
-    	User user = tokenRepository.findByToken(verificationToken).getUser();
+        User user = tokenRepository.findByToken(verificationToken).getUser();
         return user;
     }
-    
+
     @Override
     public List<User> getAllUsers() {
-    	return userRepository.findAll();
+        return userRepository.findAll();
     }
-    
+
     @Override
     public VerificationToken getVerificationToken(String VerificationToken) {
         return tokenRepository.findByToken(VerificationToken);
     }
-    
+
     @Override
     public void saveRegisteredUser(User user) {
-    	userRepository.save(user);
+        userRepository.save(user);
     }
 
     @Override
@@ -160,85 +158,124 @@ public class UserServiceImpl implements UserService {
         myToken.setUser(user);
         tokenRepository.save(myToken);
     }
-    
+
     @Override
     public void createPasswordResetTokenForUser(User user, String token) {
         PasswordResetToken myToken = new PasswordResetToken(user, token);
         passwordTokenRepository.save(myToken);
     }
-    
+
     public void changeUserPassword(User user) {
         userRepository.save(user);
     }
 
-	@Override
-	public void changeRole(ChangeRoleDTO changeRoleDTO) {
-		User user = userRepository.findByUsername(changeRoleDTO.getUsername());
-		
-		if (user == null){
+    @Override
+    public void changeRole(ChangeRoleDTO changeRoleDTO) {
+        User user = userRepository.findByUsername(changeRoleDTO.getUsername());
+
+        if (user == null) {
             throw new RecordNotFoundException("User with given username not found!");
         }
-		
-		List<Role> roles = new ArrayList<Role>();
-		for(String roleName : changeRoleDTO.getRoles()) {
-			Role role = roleRepository.findByRoleName(roleName);
-			
-			if (role == null){
-	            throw new RecordNotFoundException("Role with name " + roleName + " not found!");
-	        }
-			
-			if(roles.contains(role)) {
-				throw new RecordExistsException("Role with name " + roleName + " already specified!");
-			}
-			
-			roles.add(role);
-		}
-		user.setUserRoles(roles);
-		
-		userRepository.save(user);
-		
-	}
 
-	@Override
-	public void updateUser(String username, UserDTO userDTO, String token) {
-		String loggedUser = tokenUtils.getUsernameFromToken(token);
-		if(!loggedUser.equals(username)) {
-			throw new RuntimeException("Access denied!");
-		}
-		
-		
-		if(userDTO == null || !userDTO.isValid()) {
-			throw new RuntimeException("Invalid data format! All fields must be filled.");
-		}
-		
-		User user = userRepository.findByUsername(username);
-		
-        if (user == null){
+        List<Role> roles = new ArrayList<Role>();
+        for (String roleName : changeRoleDTO.getRoles()) {
+            Role role = roleRepository.findByRoleName(roleName);
+
+            if (role == null) {
+                throw new RecordNotFoundException("Role with name " + roleName + " not found!");
+            }
+
+            if (roles.contains(role)) {
+                throw new RecordExistsException("Role with name " + roleName + " already specified!");
+            }
+
+            roles.add(role);
+        }
+        user.setUserRoles(roles);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void updateUser(String username, UserDTO userDTO, String token) {
+        /*String loggedUser = tokenUtils.getUsernameFromToken(token);
+        if (!loggedUser.equals(username)) {
+            throw new RuntimeException("Access denied!");
+        }*/
+
+        if (userDTO == null || !userDTO.isValid()) {
+            throw new RuntimeException("Invalid data format! All fields must be filled.");
+        }
+
+        User user = userRepository.findByUsername(username);
+
+        if (user == null) {
             throw new RecordNotFoundException("Record with given username not found!");
         }
-        
-        user.setEmail(userDTO.getEmail());
-        user.setUsername(userDTO.getUsername());
+
+
+        List<Role> roles = user.getUserRoles();
+
+        boolean isAdmin = false;
+        for (Role role : roles) {
+            if (role.getRoleName().equalsIgnoreCase("ROLE_ADMIN"))
+                isAdmin = true;
+            break;
+        }
+
+
+        if (isAdmin) {
+            if (userDTO.getPassword() != null) {
+                user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
+            } else {
+                user.setPassword(user.getPassword());
+            }
+            if (userDTO.getRoles() != null) {
+                for (String roleName : userDTO.getRoles()) {
+                    Role role1 = roleRepository.findByRoleName(roleName);
+                    if (role1 == null) {
+                        throw new RecordNotFoundException("Role with name " + roleName + " not found!");
+                    }
+                    if (roles.contains(role1)) {
+                        throw new RecordExistsException("Role with name " + roleName + " already specified!");
+                    }
+                    roles.add(role1);
+                }
+                user.setUserRoles(roles);
+
+            } else {
+                user.setUserRoles(user.getUserRoles());
+            }
+
+            if (!userDTO.getEmail().equalsIgnoreCase(user.getEmail()) && userRepository.findByEmail(userDTO.getEmail()) == null) {
+                user.setEmail(userDTO.getEmail());
+            } else {
+                throw new RecordExistsException("User exist with this email");
+            }
+
+            if (!userDTO.getUsername().equals(user.getUsername()) && userRepository.findByUsername(userDTO.getUsername()) == null) {
+                user.setUsername(userDTO.getUsername());
+            } else {
+                throw new RecordExistsException("User exist with this username");
+            }
+        }
+
         user.getUserProfiles().setFirstname(userDTO.getFirstname());
         user.getUserProfiles().setLastname(userDTO.getLastname());
-        
         userRepository.save(user);
-		
-	}
 
-	@Override
-	public void changeUserPassword(PasswordChangeDTO passwordChangeDTO) {
-		User user = userRepository.findByUsername(passwordChangeDTO.getUsername());
-		
-        if (user == null){
+    }
+
+    @Override
+    public void changeUserPassword(PasswordChangeDTO passwordChangeDTO) {
+        User user = userRepository.findByUsername(passwordChangeDTO.getUsername());
+
+        if (user == null) {
             throw new RecordNotFoundException("Record with given username not found!");
         }
-        
         user.setPassword(bCryptPasswordEncoder.encode(passwordChangeDTO.getPassword()));
-        
         userRepository.save(user);
-		
-	}
 
-    
+    }
+
+
 }

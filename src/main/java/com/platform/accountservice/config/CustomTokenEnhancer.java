@@ -1,5 +1,5 @@
-/*
-package com.platform.accountservice.security;
+package com.platform.accountservice.config;
+
 
 import com.platform.accountservice.domain.User;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
@@ -26,4 +26,4 @@ public class CustomTokenEnhancer implements TokenEnhancer {
         return accessToken;
     }
 
-}*/
+}

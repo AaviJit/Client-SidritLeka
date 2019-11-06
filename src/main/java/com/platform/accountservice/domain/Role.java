@@ -31,9 +31,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "roles")
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
 public class Role implements Serializable, GrantedAuthority {
 

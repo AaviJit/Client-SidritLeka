@@ -1,16 +1,17 @@
 package com.platform.accountservice.domain.security;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import lombok.Data;
+
+import javax.persistence.*;
 import java.util.Arrays;
 
 @Entity
 @Table(name = "oauth_refresh_token")
+@Data
 public class OauthRefreshToken {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String tokenId;
 
     @Lob

@@ -34,9 +34,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "users")
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
 public class User implements Serializable, UserDetails {
 
@@ -158,6 +155,8 @@ public class User implements Serializable, UserDetails {
     @JoinColumn(name = "user_id")
     @JsonBackReference
     private Profile userProfiles;
+
+
 
     @Override
     public String toString() {

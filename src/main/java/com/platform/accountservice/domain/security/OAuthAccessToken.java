@@ -1,14 +1,17 @@
 package com.platform.accountservice.domain.security;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.Arrays;
 
 @Entity
 @Table(name = "oauth_access_token")
+@Data
 public class OAuthAccessToken {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String authenticationId;
 
     private String tokenId;

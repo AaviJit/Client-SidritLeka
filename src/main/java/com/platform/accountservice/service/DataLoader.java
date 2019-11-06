@@ -21,7 +21,7 @@ public class DataLoader implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
 
         // Load User Roles
-        if (roleRepository.findByRoleId(1) == null)
+    /*    if (roleRepository.findByRoleId(1) == null)
             roleRepository.save(new Role(1,"ROLE_ADMIN", "All Access"));
         else if (!roleRepository.findByRoleId(1).getRoleName().equals("ROLE_ADMIN")) {
             Role oldAdminDate = roleRepository.findByRoleId(1);
@@ -42,7 +42,7 @@ public class DataLoader implements ApplicationRunner {
             role.setRoleName("ROLE_USER");
             role.setRoleDescription("Limited Access");
             roleRepository.save(role);
-        }
+        }*/
 
 
 //        if (roleRepository.findById(2) == null)

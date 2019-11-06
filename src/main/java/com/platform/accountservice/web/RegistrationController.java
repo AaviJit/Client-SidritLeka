@@ -13,12 +13,12 @@ import com.platform.accountservice.domain.VerificationToken;
 import com.platform.accountservice.service.UserService;
 
 @RestController
-@RequestMapping("registrationConfirm")
+@RequestMapping("/registrationConfirm")
 public class RegistrationController {
 	@Autowired
 	private UserService service;
 	 
-	@GetMapping
+	@GetMapping(value = "")
 	public String confirmRegistration(@RequestParam("token") String token) {
 	 
 	     

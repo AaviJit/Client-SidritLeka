@@ -1,3 +1,4 @@
+/*
 package com.platform.accountservice.security;
 
 import java.io.IOException;
@@ -50,3 +51,4 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
 	}
 
 }
+*/

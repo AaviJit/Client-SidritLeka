@@ -1,3 +1,4 @@
+/*
 package com.platform.accountservice.security;
 
 import com.platform.accountservice.service.impl.CustomUserDetailsService;
@@ -52,6 +53,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		return converter;
 	}
 
+*/
 /*
 	@Bean
 	public TokenStore tokenStore() {
@@ -76,7 +78,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 				.authenticationManager(authenticationManager)
 				.accessTokenConverter(accessTokenConverter());
 	}
-*/
+*//*
+
 
 
 
@@ -102,13 +105,13 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients
-				.inMemory().withClient("android-client")
+				.inMemory().withClient("leka-client")
 				.authorizedGrantTypes("client-credentials", "password", "refresh_token")
-				.authorities("ROLE_ADMIN", "ROLE_EMPLOYEE")
+				.authorities("ROLE_ADMIN", "ROLE_USER")
 				.scopes("read", "write", "trust")
 				.resourceIds("oauth2-resource")
 				.accessTokenValiditySeconds(5000)
-				.secret("{noop}android-secret")
+				.secret("{noop}leka-secret")
 				.refreshTokenValiditySeconds(-1);
 	}
 
@@ -158,3 +161,4 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
 
 }
+*/

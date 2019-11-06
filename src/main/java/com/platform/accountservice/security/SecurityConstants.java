@@ -8,6 +8,7 @@ public class SecurityConstants {
     public static final String LOGIN_URL = "/users/login";
     public static final String EMAIL_VERIFICATION_URL = "/registrationConfirm";
     public static final String GET_USER_URL = "/users/getUser";
+    public static final String GET_ALL_USER_URL = "/users/allUsers";
     public static final String UPDATE_USER_URL = "/users/update";
     public static final String CHANGE_USER_ROLE_URL = "/users/changeRole";
     public static final String CHANGE_USER_PASSWORD_URL = "/users/changePassword";

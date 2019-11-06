@@ -8,18 +8,14 @@ import com.platform.accountservice.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.platform.accountservice.domain.dto.PasswordChangeDTO;
 import com.platform.accountservice.domain.dto.PasswordResetDTO;
 import com.platform.accountservice.domain.dto.PasswordSaveDTO;
 import com.platform.accountservice.service.SecurityService;
@@ -47,7 +43,7 @@ public class ResetPasswordController {
     BCryptPasswordEncoder bCryptPasswordEncoder;
 	 
 	@PostMapping
-	@RequestMapping("resetPassword")
+	@RequestMapping("/resetPassword")
 	public String resetPassword(@RequestBody PasswordResetDTO passwordResetRequest) {
 	    User user = service.findUserByEmail(passwordResetRequest.getEmail());
 
@@ -68,7 +64,7 @@ public class ResetPasswordController {
 	}
 
 	@PostMapping
-	@RequestMapping("savePassword")
+	@RequestMapping("/savePassword")
 	public String savePassword(@RequestBody PasswordSaveDTO passwordSaveRequest) {
 	    String result = securityService.validatePasswordResetToken(passwordSaveRequest.getId(), passwordSaveRequest.getToken());
 	    if (result != null) {
@@ -83,9 +79,5 @@ public class ResetPasswordController {
 	    
 	    return "New Password Saved Successfully!";
 	}
-	
-	
-
-	
 
 }

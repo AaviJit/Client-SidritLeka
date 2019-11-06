@@ -6,6 +6,8 @@
  DROP TABLE IF EXISTS permissions;
  DROP TABLE IF EXISTS profile;
  DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS oauth_access_token;
+DROP TABLE IF EXISTS oauth_refresh_token;
 
 CREATE  TABLE users (
 	user_id SERIAL,
@@ -66,6 +68,23 @@ CREATE TABLE verification_token (
     user_id INTEGER NOT NULL,
 	FOREIGN KEY (user_id) references users (user_id),
 	PRIMARY KEY (verification_id));
+
+CREATE TABLE oauth_access_token(
+authentication_id SERIAL,
+token_id varchar(255),
+token bytea,
+user_name varchar(255),
+client_id varchar(255),
+authentication bytea,
+refresh_token varchar(255)
+);
+
+CREATE TABLE oauth_refresh_token(
+token_id SERIAL,
+token bytea,
+authentication bytea
+);
+
 	
 INSERT INTO roles (role_name, role_description) values ('ROLE_USER', 'user');
 INSERT INTO roles (role_name, role_description) values ('ROLE_ADMIN', 'admin');

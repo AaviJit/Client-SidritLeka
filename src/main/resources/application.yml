@@ -11,7 +11,7 @@ spring:
     #url: jdbc:postgresql://localhost:5432/plt_accounts
     #url: jdbc:postgresql://172.30.2.88:5432/plt_accounts
     #username: admin
-    username: admin
+    username: postgres
     password: admin
     initialization-mode: always # execute schema.sql on startup
 
