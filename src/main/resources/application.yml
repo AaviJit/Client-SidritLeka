@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: accounts-service
+  profiles:
+    active: default
+
+  # Datasource
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/plt_accounts
+    #url: jdbc:postgresql://localhost:5432/plt_accounts
+    #url: jdbc:postgresql://172.30.2.88:5432/plt_accounts
+    #username: admin
+    username: admin
+    password: admin
+    initialization-mode: always # execute schema.sql on startup
+
+  # JPA
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob:
+            non_contextual_creation: true # org.postgresql.jdbc.PgConnection.createClob() is not yet implemented -fix
+    generate-ddl: false
+    show-sql: true
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: besteurocup@gmail.com
+    password: qklbkfuotcwcqvgg
+    properties:
+      mail:
+        smtp:
+          auth: true
+          connectiontimeout: 5000
+          timeout: 5000
+          wrtitetimeout: 5000
+          ssl:
+            trust: smtp.gmail.com
+          starttls:
+            enable: true
+          socketFactory:
+            port: 465
+            class: javax.net.ssl.SSLSocketFactory
+
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+
+server:
+  port: 8090
